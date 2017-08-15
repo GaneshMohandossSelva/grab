@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <style>
+    body {
+        padding: 50px;
+    }
+
+    #bar-container {
+        margin-top: 10px;
+    }
+
+    .bar {
+        background-color: cornsilk;
+        border: 1px solid red;
+        display: block;
+        height: 30px;
+        width: 100%;
+    }
+	#bar {
+		width: 100%;
+		height: 100%;
+	}
+	.note {
+		font-size: 13px;
+		color: #4c4c4c;
+		margin-bottom: 11px;
+	}
+    </style>
+	<div class="note">Note: You can input values in the textbox, result will reflect immediately in the bar. </div>
+    <input id="bar-widths-input" />
+    <div id="bar-container">
+	    <div id="bar">
+			<div id="msg"></div>
+			<canvas id="myCanvas" ></canvas>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/20.1.2/min/jcanvas.min.js"></script>
+    <script>
+    // Render a horizontal percentage-based bar chart that displays
+    // multiple bars side-by-side in a single row, based on the sizes
+    // given in the input array.
+    // Input format is a comma-separated list of numbers.
+    // For example, entering `1,2,1` will render three bars, with the
+    // middle bar having twice the width of the other bars.
+    // The bar chart will be re-rendered as the values in the input updates.
+    // Feel free to make changes to the given markup and CSS.
+    // Write your code here.
+	
+	var $canvasDiv = $('#bar');
+ 	var canvas = document.getElementById('myCanvas'),
+    context = canvas.getContext('2d');
+	canvas.height = $canvasDiv.innerHeight();
+	canvas.width = $canvasDiv.innerWidth();
+    // Store the canvas object into a variable
+
+	var $myCanvas = $('#myCanvas');
+	$( "#bar-widths-input" ).keypress(function( event ) {
+		setTimeout(function(){
+			var w = 0;
+			var x = 0;
+			var inputValues = $( "#bar-widths-input" ).val();
+			var arr = inputValues.split(",");
+			var arrvalue = sumOfVal(arr);
+			
+			context.clearRect(0, 0, canvas.width, 100);
+			for(var i=0; i<arr.length; i++) {
+				$("#msg").text("");
+				if(arr[i] && arr.length<=50) {
+					var x = w+x;
+					var w = (canvas.width / arrvalue.tot) * parseFloat(arr[i]);
+					//$("#msg").text(w);
+					$myCanvas.drawRect({
+					  fillStyle: 'cornsilk',
+					  strokeStyle: 'red',
+					  strokeWidth: 1,
+					  x: x, y: 0,
+					  fromCenter: false,
+					  width: w,
+					  height: 30
+					});
+				} else {
+					$("#msg").text("");
+					$("#msg").text("Please enter the valid value (1,2,1) & Length of the array value should be less than 50.");
+				}
+			}
+		},500);
+
+		function sumOfVal(val) {
+			var returnVal = [{
+					tot: 0,
+					len: 0
+				}];
+			var len = 0;
+			var sum = 0;
+			for(var i=0; i<val.length; i++) {
+				if(val[i]) {
+					sum += parseFloat(val[i]);
+					len++;
+				}
+				
+			}
+			returnVal.tot = sum;
+			returnVal.len = len;
+			return returnVal;
+		}
+	});
+
+   
+
+    </script>
+</body>
+
+</html>
